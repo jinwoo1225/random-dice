@@ -56,6 +56,7 @@ func run() error {
 			log.Fatalln(err)
 		}
 
+		log.Println("Starting gRPC server... port:", cfg.Server.GRPCPort)
 		if err := grpcServer.Serve(lis); err != nil && !errors.Is(err, grpc.ErrServerStopped) {
 			log.Fatalln(err)
 		}
