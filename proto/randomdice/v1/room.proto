@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package randomdice.v1;
+
+import "google/protobuf/timestamp.proto";
+import "randomdice/v1/user.proto";
+
+option go_package = "github.com/jinwooo1225/random-dice/randomdice/v1;randomdicev1";
+option java_multiple_files = true;
+option java_package = "com.randomdice.v1";
+
+service RoomService {
+  rpc CreateRoom(CreateRoomRequest) returns (CreateRoomResponse) {}
+  rpc ListRooms(ListRoomsRequest) returns (ListRoomsResponse) {}
+  rpc GetRoom(GetRoomRequest) returns (GetRoomResponse) {}
+  rpc JoinRoom(JoinRoomRequest) returns (JoinRoomResponse) {}
+  rpc LeaveRoom(LeaveRoomRequest) returns (LeaveRoomResponse) {}
+  rpc StartGame(StartGameRequest) returns (StartGameResponse) {}
+  rpc RollDice(RollDiceRequest) returns (RollDiceResponse) {}
+  rpc GetGameResult(GetGameResultRequest) returns (GetGameResultResponse) {}
+}
+
+enum RoomStatus {
+  ROOM_STATUS_UNSPECIFIED = 0;
+  ROOM_STATUS_WAITING = 1;
+  ROOM_STATUS_FULL_OF_PLAYER = 2;
+  ROOM_STATUS_PLAYING = 3;
+}
+
+message Room {
+  string id = 1;
+  string name = 2;
+  repeated User users = 3;
+  User owner = 4;
+  RoomStatus status = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+message CreateRoomRequest {
+  string name = 1;
+  User owner = 2;
+}
+
+message CreateRoomResponse {
+  string id = 1;
+}
+
+message ListRoomsRequest {
+  int64 page = 1;
+  int64 size = 2;
+}
+
+message ListRoomsResponse {
+  repeated Room rooms = 1;
+}
+
+message GetRoomRequest {
+  string id = 1;
+}
+
+message GetRoomResponse {
+  Room room = 1;
+}
+
+message JoinRoomRequest {
+  string id = 1;
+  User user = 2;
+}
+
+message JoinRoomResponse {
+  Room room = 1;
+}
+
+message LeaveRoomRequest {
+  string id = 1;
+  User user = 2;
+}
+
+message LeaveRoomResponse {
+  Room room = 1;
+}
+
+message StartGameRequest {
+  string id = 1;
+}
+
+message StartGameResponse {
+  Room room = 1;
+}
+
+message RollDiceRequest {
+  string room_id = 1;
+  int64 dice_count = 2;
+}
+
+message RollDiceResponse {
+  Room room = 1;
+  repeated int64 dice = 2;
+}
+
+message GetGameResultRequest {
+  string room_id = 1;
+}
+
+message GetGameResultResponse {
+  Room room = 1;
+  User winner = 2;
+}

@@ -1,0 +1,9 @@
+MongoDB:
+  Host: mongodb://localhost:27017
+  Database: random-dice
+  Username: username
+  Password: password
+
+Server:
+  Host: localhost
+  GRPCPort: 8080
