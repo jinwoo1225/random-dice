@@ -15,6 +15,10 @@ type Config struct {
 		Host     string `yaml:"Host"`
 		GRPCPort int64  `yaml:"GRPCPort"`
 	} `yaml:"Server"`
+
+	Base struct {
+		Phase string `yaml:"Phase"`
+	} `yaml:"Base"`
 }
 
 func NewConfig() (*Config, error) {

@@ -7,3 +7,6 @@ MongoDB:
 Server:
   Host: localhost
   GRPCPort: 8080
+
+Base:
+  Phase: development

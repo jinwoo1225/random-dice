@@ -4,10 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/benbjohnson/clock"
 	"github.com/jinwoo1225/random-dice/client"
 	"github.com/jinwoo1225/random-dice/internal/config"
 	"github.com/jinwoo1225/random-dice/internal/server"
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"log"
 	"net"
@@ -39,13 +41,32 @@ func run() error {
 		panic(err)
 	}
 
+	clk := clock.New()
+
+	var zapLogger *zap.Logger
+	if cfg.Base.Phase == "production" {
+		logger, err := zap.NewProduction()
+		if err != nil {
+			return err
+		}
+
+		zapLogger = logger
+	} else {
+		logger, err := zap.NewDevelopment()
+		if err != nil {
+			return err
+		}
+
+		zapLogger = logger
+	}
+
 	mdb, mdbCleanup, err := client.NewMongoDBClient(ctx, cfg)
 	if err != nil {
 		return err
 	}
 	defer mdbCleanup()
 
-	grpcServer, err := server.NewGRPCServer(cfg, mdb)
+	grpcServer, err := server.NewGRPCServer(cfg, zapLogger, clk, mdb)
 	if err != nil {
 		return err
 	}
