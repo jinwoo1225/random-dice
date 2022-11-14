@@ -49,6 +49,8 @@ jobs:
           go-version-file: "go.mod"
           cache: true
 
+      - uses: bufbuild/buf-setup-action@v1
+
       - name: Clean
         run: make clean
 
