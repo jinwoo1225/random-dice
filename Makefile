@@ -19,3 +19,12 @@ lint: lint-go
 .PHONY: test
 test:
 	go test -v ./internal/... ./client/...
+
+.PHONY: clean
+clean:
+	rm -rf ./gen
+
+.PHONY: diff
+diff:
+	git diff --exit-code
+	if [ -n "$(git status --porcelain)" ]; then git status; exit 1; else exit 0; fi
