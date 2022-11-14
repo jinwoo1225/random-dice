@@ -50,6 +50,7 @@ jobs:
           cache: true
 
       - uses: bufbuild/buf-setup-action@v1
+      - uses: arduino/setup-protoc@v1
 
       - name: Clean
         run: make clean
