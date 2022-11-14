@@ -14,11 +14,17 @@ var (
 	ErrFailedToConvertToObjectId = errors.New("failed to convert to object id")
 )
 
-type MongoDBClient struct {
+type MongoDBClient interface {
+	InsertOne(ctx context.Context, database string, collection string, data interface{}) (*primitive.ObjectID, error)
+	FindOne(ctx context.Context, database string, collection string, filter interface{}) (*mongo.SingleResult, error)
+	FindMany(ctx context.Context, database string, collection string, filter interface{}, orderBy interface{}, page int64, limit int64) (*mongo.Cursor, error)
+}
+
+type DefaultMongoDBClient struct {
 	client *mongo.Client
 }
 
-func NewMongoDBClient(ctx context.Context, conf *config.Config) (*MongoDBClient, func(), error) {
+func NewMongoDBClient(ctx context.Context, conf *config.Config) (*DefaultMongoDBClient, func(), error) {
 	opts := options.Client()
 	opts.ApplyURI(conf.MongoDB.Host)
 	opts.SetAuth(options.Credential{
@@ -45,10 +51,10 @@ func NewMongoDBClient(ctx context.Context, conf *config.Config) (*MongoDBClient,
 		}
 	}
 
-	return &MongoDBClient{client: client}, cleanUpFunc, nil
+	return &DefaultMongoDBClient{client: client}, cleanUpFunc, nil
 }
 
-func (c *MongoDBClient) InsertOne(ctx context.Context, database string, collection string, data interface{}) (*primitive.ObjectID, error) {
+func (c *DefaultMongoDBClient) InsertOne(ctx context.Context, database string, collection string, data interface{}) (*primitive.ObjectID, error) {
 	res, err := c.client.Database(database).Collection(collection).InsertOne(ctx, data)
 	if err != nil {
 		return nil, err
@@ -60,4 +66,31 @@ func (c *MongoDBClient) InsertOne(ctx context.Context, database string, collecti
 	}
 
 	return &v, nil
+}
+
+func (c *DefaultMongoDBClient) FindOne(ctx context.Context, database string, collection string, filter interface{}) (*mongo.SingleResult, error) {
+	return c.client.Database(database).Collection(collection).FindOne(ctx, filter, nil), nil
+}
+
+func (c *DefaultMongoDBClient) FindMany(
+	ctx context.Context,
+	database string,
+	collection string,
+	filter interface{},
+	orderBy interface{},
+	page int64,
+	limit int64,
+) (*mongo.Cursor, error) {
+	opts := options.Find()
+	opts.Limit = &limit
+	opts.Skip = &page
+
+	opts.SetSort(orderBy)
+
+	res, err := c.client.Database(database).Collection(collection).Find(ctx, filter, opts)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
 }
