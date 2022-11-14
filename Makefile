@@ -15,3 +15,7 @@ lint-go:
 
 .PHONY: lint
 lint: lint-go
+
+.PHONY: test
+test:
+	go test -v ./internal/... ./client/...
