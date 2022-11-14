@@ -3,15 +3,16 @@ package client
 import (
 	"context"
 	"errors"
+	"log"
+
 	"github.com/jinwoo1225/random-dice/internal/config"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
 )
 
 var (
-	ErrFailedToConvertToObjectId = errors.New("failed to convert to object id")
+	ErrFailedToConvertToObjectID = errors.New("failed to convert to object id")
 )
 
 type MongoDBClient interface {
@@ -62,7 +63,7 @@ func (c *DefaultMongoDBClient) InsertOne(ctx context.Context, database string, c
 
 	v, ok := res.InsertedID.(primitive.ObjectID)
 	if !ok {
-		return nil, ErrFailedToConvertToObjectId
+		return nil, ErrFailedToConvertToObjectID
 	}
 
 	return &v, nil
