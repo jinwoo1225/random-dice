@@ -8,3 +8,10 @@ generate-go:
 
 .PHONY: generate
 generate: generate-proto generate-go
+
+.PHONY: lint-go
+lint-go:
+	golangci-lint run ./...
+
+.PHONY: lint
+lint: lint-go
