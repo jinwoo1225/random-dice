@@ -42,7 +42,7 @@ func initConfig() {
 		// Search config in home directory with name ".randomdice" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigType("yaml")
-		viper.SetConfigName(".randomdice")
+		viper.SetConfigName(".random-dice")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
