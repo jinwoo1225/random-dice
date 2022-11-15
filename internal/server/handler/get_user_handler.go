@@ -36,6 +36,10 @@ func GetUser(mdb client.MongoDBClient) GetUserFunc {
 		var userData User
 
 		user, err := mdb.FindOne(ctx, MongoDatabaseName, MongoUserCollectionName, bson.M{"_id": userObjectID})
+		if err != nil {
+			return nil, status.Error(codes.Internal, err.Error())
+		}
+
 		err = user.Decode(&userData)
 		if err != nil {
 			if err == mongo.ErrNoDocuments {
