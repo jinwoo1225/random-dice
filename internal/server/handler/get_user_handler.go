@@ -28,14 +28,14 @@ func GetUser(mdb client.MongoDBClient) GetUserFunc {
 		}
 
 		userID := req.GetId()
-		userObjectId, err := primitive.ObjectIDFromHex(userID)
+		userObjectID, err := primitive.ObjectIDFromHex(userID)
 		if err != nil {
 			return nil, status.Error(codes.Internal, err.Error())
 		}
 
 		var userData User
 
-		user, err := mdb.FindOne(ctx, MongoDatabaseName, MongoUserCollectionName, bson.M{"_id": userObjectId})
+		user, err := mdb.FindOne(ctx, MongoDatabaseName, MongoUserCollectionName, bson.M{"_id": userObjectID})
 		err = user.Decode(&userData)
 		if err != nil {
 			if err == mongo.ErrNoDocuments {
