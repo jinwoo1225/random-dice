@@ -37,7 +37,7 @@ jobs:
         run: make test
 
   generate:
-    name: Generate && Diff
+    name: Generate & Diff
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -49,8 +49,13 @@ jobs:
           go-version-file: "go.mod"
           cache: true
 
-      - uses: asdf-vm/actions/install@v1
-        name: Add asdf-vm install
+      - name: Add asdf-vm install
+        uses: asdf-vm/actions/install@v1
+        with:
+          before_install: |
+            asdf plugin add golang
+            asdf install golang 1.19
+
 
       - name: Clean
         run: make clean
