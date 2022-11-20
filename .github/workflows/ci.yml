@@ -49,8 +49,8 @@ jobs:
           go-version-file: "go.mod"
           cache: true
 
-      - uses: bufbuild/buf-setup-action@v1
-      - uses: arduino/setup-protoc@v1
+      - uses: asdf-vm/actions/install@v1
+        name: Add asdf-vm install
 
       - name: Clean
         run: make clean
