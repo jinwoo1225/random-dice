@@ -51,10 +51,6 @@ jobs:
 
       - name: Add asdf-vm install
         uses: asdf-vm/actions/install@v1
-        with:
-          before_install: |
-            asdf plugin add golang
-            asdf install golang 1.19
 
 
       - name: Clean
