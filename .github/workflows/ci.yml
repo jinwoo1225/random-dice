@@ -42,13 +42,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        
+
       - name: Setup asdf-vm
         uses: asdf-vm/actions/setup@v1
 
       # install latest golang for now
       - name: Setup Go from asdf
-        runs: |
+        run: |
           asdf plugin-add golang
           asdf install golang latest
 
