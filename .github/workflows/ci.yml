@@ -42,16 +42,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        
+      - name: Setup asdf-vm
+        uses: asdf-vm/actions/setup@v1
 
-      - name: Setup-Go
-        uses: actions/setup-go@v3
-        with:
-          go-version-file: "go.mod"
-          cache: true
+      # install latest golang for now
+      - name: Setup Go from asdf
+        runs: |
+          asdf plugin-add golang
+          asdf install golang latest
 
       - name: Add asdf-vm install
         uses: asdf-vm/actions/install@v1
-
 
       - name: Clean
         run: make clean
