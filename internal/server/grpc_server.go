@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+
 	"github.com/benbjohnson/clock"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
@@ -29,6 +30,10 @@ func (s *RandomDiceServer) CreateUser(ctx context.Context, req *randomdicev1.Cre
 
 func (s *RandomDiceServer) ListUsers(ctx context.Context, req *randomdicev1.ListUsersRequest) (*randomdicev1.ListUsersResponse, error) {
 	return handler.ListUser(s.mdb)(ctx, req)
+}
+
+func (s *RandomDiceServer) GetUser(ctx context.Context, req *randomdicev1.GetUserRequest) (*randomdicev1.GetUserResponse, error) {
+	return handler.GetUser(s.mdb)(ctx, req)
 }
 
 func NewRandomDiceServer(cfg *config.Config, clk clock.Clock, mdb *client.DefaultMongoDBClient) (*RandomDiceServer, error) {
