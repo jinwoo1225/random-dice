@@ -14,6 +14,8 @@ require (
 )
 
 require (
+	github.com/aws/aws-sdk-go-v2 v1.17.1 // indirect
+	github.com/aws/smithy-go v1.13.4 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
