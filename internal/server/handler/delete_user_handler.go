@@ -2,7 +2,8 @@ package handler
 
 import (
 	"context"
-	"errors"
+	"github.com/pkg/errors"
+
 	"github.com/benbjohnson/clock"
 	"github.com/jinwoo1225/random-dice/client"
 	randomdicev1 "github.com/jinwoo1225/random-dice/gen/proto/go/randomdice/v1"
@@ -33,7 +34,7 @@ func DeleteUser(
 
 		err = mdb.FindOne(ctx, MongoDatabaseName, MongoUserCollectionName, bson.M{"_id": objectID}).Decode(&user)
 		if err != nil && errors.Is(err, mongo.ErrNoDocuments) {
-			return nil, status.Error(codes.NotFound, err.Error())
+			return nil, status.Error(codes.NotFound, errors.Wrap(err, errNoUserFound.Error()).Error())
 		}
 
 		if err != nil {
