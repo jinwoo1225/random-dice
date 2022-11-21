@@ -17,8 +17,10 @@ var (
 
 type MongoDBClient interface {
 	InsertOne(ctx context.Context, database string, collection string, data interface{}) (*primitive.ObjectID, error)
-	FindOne(ctx context.Context, database string, collection string, filter interface{}) (*mongo.SingleResult, error)
+	FindOne(ctx context.Context, database string, collection string, filter interface{}) *mongo.SingleResult
 	FindMany(ctx context.Context, database string, collection string, filter interface{}, orderBy interface{}, page int64, limit int64) (*mongo.Cursor, error)
+	UpdateOne(ctx context.Context, database string, collection string, filter interface{}, update interface{}) (*mongo.UpdateResult, error)
+	DeleteOne(ctx context.Context, database string, collection string, filter interface{}) (*mongo.DeleteResult, error)
 }
 
 type DefaultMongoDBClient struct {
@@ -69,8 +71,8 @@ func (c *DefaultMongoDBClient) InsertOne(ctx context.Context, database string, c
 	return &v, nil
 }
 
-func (c *DefaultMongoDBClient) FindOne(ctx context.Context, database string, collection string, filter interface{}) (*mongo.SingleResult, error) {
-	return c.client.Database(database).Collection(collection).FindOne(ctx, filter, nil), nil
+func (c *DefaultMongoDBClient) FindOne(ctx context.Context, database string, collection string, filter interface{}) *mongo.SingleResult {
+	return c.client.Database(database).Collection(collection).FindOne(ctx, filter, nil)
 }
 
 func (c *DefaultMongoDBClient) FindMany(
@@ -94,4 +96,12 @@ func (c *DefaultMongoDBClient) FindMany(
 	}
 
 	return res, nil
+}
+
+func (c *DefaultMongoDBClient) UpdateOne(ctx context.Context, database string, collection string, filter interface{}, update interface{}) (*mongo.UpdateResult, error) {
+	return c.client.Database(database).Collection(collection).UpdateOne(ctx, filter, update)
+}
+
+func (c *DefaultMongoDBClient) DeleteOne(ctx context.Context, database string, collection string, filter interface{}) (*mongo.DeleteResult, error) {
+	return c.client.Database(database).Collection(collection).DeleteOne(ctx, filter)
 }

@@ -21,7 +21,7 @@ type RandomDiceServer struct {
 
 	clk clock.Clock
 	cfg *config.Config
-	mdb *client.DefaultMongoDBClient
+	mdb client.MongoDBClient
 }
 
 func (s *RandomDiceServer) CreateUser(ctx context.Context, req *randomdicev1.CreateUserRequest) (*randomdicev1.CreateUserResponse, error) {
@@ -36,7 +36,15 @@ func (s *RandomDiceServer) GetUser(ctx context.Context, req *randomdicev1.GetUse
 	return handler.GetUser(s.mdb)(ctx, req)
 }
 
-func NewRandomDiceServer(cfg *config.Config, clk clock.Clock, mdb *client.DefaultMongoDBClient) (*RandomDiceServer, error) {
+func (s *RandomDiceServer) DeleteUser(ctx context.Context, req *randomdicev1.DeleteUserRequest) (*randomdicev1.DeleteUserResponse, error) {
+	return handler.DeleteUser(s.clk, s.mdb)(ctx, req)
+}
+
+func NewRandomDiceServer(
+	cfg *config.Config,
+	clk clock.Clock,
+	mdb client.MongoDBClient,
+) (*RandomDiceServer, error) {
 	return &RandomDiceServer{
 		clk: clk,
 		cfg: cfg,
@@ -48,7 +56,7 @@ func NewGRPCServer(
 	cfg *config.Config,
 	logger *zap.Logger,
 	clk clock.Clock,
-	mdb *client.DefaultMongoDBClient,
+	mdb client.MongoDBClient,
 ) (*grpc.Server, error) {
 	grpcServer := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(

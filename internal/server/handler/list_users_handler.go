@@ -27,7 +27,9 @@ func ListUser(mdb client.MongoDBClient) ListUsersFunc {
 			"created_at": -1,
 		}
 
-		cur, err := mdb.FindMany(ctx, MongoDatabaseName, MongoUserCollectionName, bson.M{}, sortOpt, req.Page, req.Limit)
+		cur, err := mdb.FindMany(ctx, MongoDatabaseName, MongoUserCollectionName, bson.M{
+			"deleted_at": nil,
+		}, sortOpt, req.Page, req.Limit)
 		if err != nil {
 			return nil, status.Error(codes.Internal, err.Error())
 		}

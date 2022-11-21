@@ -27,11 +27,12 @@ type User struct {
 	Email     string    `bson:"email"`
 	CreatedAt time.Time `bson:"created_at"`
 	UpdatedAt time.Time `bson:"updated_at"`
+	DeletedAt time.Time `bson:"deleted_at"`
 }
 
 type CreateUserFunc func(ctx context.Context, req *randomdicev1.CreateUserRequest) (*randomdicev1.CreateUserResponse, error)
 
-func CreateUser(clk clock.Clock, mdb *client.DefaultMongoDBClient) CreateUserFunc {
+func CreateUser(clk clock.Clock, mdb client.MongoDBClient) CreateUserFunc {
 	return func(ctx context.Context, req *randomdicev1.CreateUserRequest) (*randomdicev1.CreateUserResponse, error) {
 		if err := validateCreateUserRequest(req); err != nil {
 			return nil, err

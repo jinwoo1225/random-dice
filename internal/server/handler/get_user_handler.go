@@ -2,7 +2,7 @@ package handler
 
 import (
 	"context"
-	"errors"
+	"github.com/pkg/errors"
 
 	"github.com/jinwoo1225/random-dice/client"
 	randomdicev1 "github.com/jinwoo1225/random-dice/gen/proto/go/randomdice/v1"
@@ -34,17 +34,12 @@ func GetUser(mdb client.MongoDBClient) GetUserFunc {
 		}
 
 		var userData User
-
-		user, err := mdb.FindOne(ctx, MongoDatabaseName, MongoUserCollectionName, bson.M{"_id": userObjectID})
-		if err != nil {
-			return nil, status.Error(codes.Internal, err.Error())
+		err = mdb.FindOne(ctx, MongoDatabaseName, MongoUserCollectionName, bson.M{"_id": userObjectID}).Decode(&userData)
+		if err != nil && errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, status.Error(codes.NotFound, errors.Wrap(err, errNoUserFound.Error()).Error())
 		}
 
-		err = user.Decode(&userData)
 		if err != nil {
-			if err == mongo.ErrNoDocuments {
-				return nil, status.Error(codes.NotFound, errNoUserFound.Error())
-			}
 			return nil, status.Error(codes.Internal, err.Error())
 		}
 
