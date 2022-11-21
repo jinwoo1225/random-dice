@@ -66,7 +66,7 @@ func validateDeleteUserRequest(req *randomdicev1.DeleteUserRequest) error {
 		return errInvalidID
 	}
 
-	if _, err := primitive.ObjectIDFromHex(req.Id); err != nil {
+	if validObjectID := primitive.IsValidObjectID(req.Id); !validObjectID {
 		return errInvalidID
 	}
 
