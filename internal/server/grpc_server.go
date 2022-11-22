@@ -36,6 +36,10 @@ func (s *RandomDiceServer) GetUser(ctx context.Context, req *randomdicev1.GetUse
 	return handler.GetUser(s.mdb)(ctx, req)
 }
 
+func (s *RandomDiceServer) UpdateUser(ctx context.Context, req *randomdicev1.UpdateUserRequest) (*randomdicev1.UpdateUserResponse, error) {
+	return handler.UpdateUser(s.clk, s.mdb)(ctx, req)
+}
+
 func (s *RandomDiceServer) DeleteUser(ctx context.Context, req *randomdicev1.DeleteUserRequest) (*randomdicev1.DeleteUserResponse, error) {
 	return handler.DeleteUser(s.clk, s.mdb)(ctx, req)
 }
