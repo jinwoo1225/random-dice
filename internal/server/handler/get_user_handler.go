@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+
 	"github.com/pkg/errors"
 
 	"github.com/jinwoo1225/random-dice/client"
